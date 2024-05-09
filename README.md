@@ -1,4 +1,4 @@
-# EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER
+# EXPERIMENT--06-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER
 
 ### Aim:
 To generate a PWM wave at the timer pin output and  simuate it on  proteus using an virtual oscilloscope  
@@ -96,179 +96,43 @@ Step14. click on debug and simulate using simulation as shown below
   
 
 ## STM 32 CUBE PROGRAM :
-```
-
-#include "main.h"
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_TIM1_Init(void);
-int main(void)
-{
-HAL_Init();
-SystemClock_Config();
-MX_GPIO_Init();
-MX_TIM1_Init();
-HAL_TIM_Base_Start(&htim1);
-  HAL_TIM_PWM_Init(&htim1);
-  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-  while (1)
-  {
-  
-  }
-}
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 84;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-static void MX_TIM1_Init(void)
-{
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 35;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 1000;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 900;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  HAL_TIM_MspPostInit(&htim1);
-}
-static void MX_GPIO_Init(void)
-{
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-}
-void Error_Handler(void)
-{
-  __disable_irq();
-  while (1)
-  {
-  }
-}
-#ifdef  USE_FULL_ASSERT
-void assert_failed(uint8_t *file, uint32_t line)
-{
-
-}
-#endif
-```
- ### Output screen shots of proteus :
- ```
-
- ![328747410-0b6ae71c-3497-47f8-83a1-ba36d931133c](https://github.com/Sangavi-suresh/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/118541861/0794e722-8e14-4555-b317-c2a7a16a3c93)
-
-```
-
-### CIRCUIT DIAGRAM :
-
-![328747459-03d25d76-9a96-4324-9360-404e9014622a](https://github.com/Sangavi-suresh/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/118541861/4c7e5ace-fc95-4d7d-b483-5166ce3808b8)
-
-### DUTY CYCLE AND FREQUENCY CALCULATION:
-
-FOR PULSE AT 50%:
-
-```
-TON = 1.75ms
-TOFF= 1.75ms
-TOTAL TIME = 3.5ms
-FREQUENCY = 1/(TOTAL TIME) = 1/3.5ms = 285.7 Hz
-DUTY CYCLE =TON / (TOTAL TIME) * 100 = 50%
-
-```
-
-![328747738-1cd73140-f079-4f41-a605-6316aa744508](https://github.com/Sangavi-suresh/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/118541861/02333b55-1dc7-4a75-ac0b-35b39695fd73)
-
-FOR PULSE AT 60%:
-
-```
-TON = 2.75ms
-TOFF=0.75ms
-TOTAL TIME = 3.5ms
-FREQUENCY = 1/(TOTAL TIME) = 1/3.5ms = 285.7 Hz
-DUTY CYCLE =TON / (TOTAL TIME) * 100 = 78.5%
-
-```
-
-![328747835-8edf2276-86cf-4539-bf91-b286e4685878](https://github.com/Sangavi-suresh/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/118541861/1a2d3b3b-7cbe-4c30-8c12-1edb6ffe7b19)
-
-FOR PULSE AT 70%:
-
-```
-TON = 3ms
-TOFF=0.5ms
-TOTAL TIME = 3.5ms
-FREQUENCY = 1/(TOTAL TIME) = 1/3.5 ms = 285.7 Hz
-DUTY CYCLE = TON / (TOTAL TIME) * 100 = 85.7%
-
-```
-
-![328747921-6b0dc9da-8c96-4175-9a47-600370080fc8](https://github.com/Sangavi-suresh/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/118541861/97fbacaf-0420-481d-9c76-ce0e099b5505)
 
 
 
-### Result :
 
-A PWM Signal is generated using the following frequency and various duty cycles are simulated
+
+## Output screen shots of proteus  :
+ 
+ 
+ ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
+ 
+
+## DUTY CYCLE AND FREQUENCY CALCULATION 
+FOR PULSE AT 500
+
+TON = 
+TOFF=
+TOTAL TIME = 
+FREQUENCY = 1/(TOTAL TIME)
+
+FOR PULSE AT 700
+
+TON = 
+TOFF=
+TOTAL TIME = 
+FREQUENCY = 1/(TOTAL TIME)
+
+
+FOR PULSE AT 900
+
+TON = 
+TOFF=
+TOTAL TIME = 
+FREQUENCY = 1/(TOTAL TIME)
+
+
+## Result :
+A PWM Signal is generated using the following frequency and various duty cycles are simulated 
 
 
 
